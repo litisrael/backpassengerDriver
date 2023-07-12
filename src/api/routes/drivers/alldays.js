@@ -85,37 +85,54 @@ export  function allDaysRouter(DB) {
   }
 
   // Función para actualizar registros existentes
-  async function updateDays(req, res) {
-    try {
-      const updatedDaysData = [];
+  // Función para actualizar registros existentes
+async function updateDays(req, res) {
+  try {
+    const updatedDaysData = [];
 
-      for (const dayData of req.body) {
-        const { day, data } = dayData;
+    for (const dayData of req.body) {
+      const { day, data } = dayData;
 
-        const table = DB.drivers.daysOfWeek.find(
-          (table) => table.tableName === day
-        );
+      const table = DB.drivers.daysOfWeek.find(
+        (table) => table.tableName === day
+      );
 
-        const updatedData = await table.bulkCreate(data, {
-          updateOnDuplicate: [
-            "unavailable_starting",
-            "unavailable_until",
-     
-          ],
+      for (const newData of data) {
+        const { id, unavailable_starting, unavailable_until } = newData;
+
+        const existingData = await table.findOne({ where: { id: id } });
+
+        if (!existingData) {
+          return res.status(404).json({
+            message: `Day ${day} with ID ${id} not found`,
+          });
+        }
+
+        await existingData.update({
+          unavailable_starting,
+          unavailable_until
         });
 
-        updatedDaysData.push({ day, data: updatedData });
+        updatedDaysData.push(existingData);
       }
-
-      return res.json(updatedDaysData);
-    } catch (error) {
-      return res.status(500).json({
-        message: error.message,
-      });
     }
-  }
 
-  // Función para eliminar registros
+    return res.status(200).json({
+      message: "Days updated successfully",
+      updatedData: updatedDaysData,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error updating days",
+      error: error.message,
+    });
+  }
+}
+
+
+
+  /* borra depende el id que lleva en el bodi la bentaja 
+  puede borrar muchos dias la debentaja nose si el delete lleva body */
   async function deleteDays(req, res) {
     try {
       const daysData = req.body;

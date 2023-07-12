@@ -7,7 +7,7 @@ import { createVehicle } from "./drivers/vehicles.js";
 import { createReservationOneWay } from "./passengers/reserve.one.way.js";
 // import { queryDriversOfReserve } from "../api/query/reserve.drivers.js";
 import { createDaysOfWeek } from "./availability/days.of.week.js";
-
+import { createReservationTwoWays } from "./passengers/reserve.two.ways.js";
 async function tablesDrivers(sequelize) {
   const daysOfWeek = await createDaysOfWeek(sequelize);
   const company = await createCompany(sequelize);
@@ -72,12 +72,20 @@ async function tablesPassenger(sequelize) {
   const passenger = await createPassenger(sequelize);
   const passengerReservationTourist = await createReservationTourist(sequelize);
   const passengerReservationOneWay = await createReservationOneWay(sequelize);
+   const reservationTwoWays = await createReservationTwoWays(sequelize)
 
   passenger.hasMany(passengerReservationOneWay, {
     foreignKey: { name: "passenger_id", allowNull: false },
   });
 
   passengerReservationOneWay.belongsTo(passenger, {
+    foreignKey: { name: "passenger_id",  allowNull: false },
+  });
+ passenger.hasMany(reservationTwoWays, {
+    foreignKey: { name: "passenger_id", allowNull: false },
+  });
+
+  reservationTwoWays.belongsTo(passenger, {
     foreignKey: { name: "passenger_id",  allowNull: false },
   });
  
@@ -96,6 +104,7 @@ async function tablesPassenger(sequelize) {
     passengerReservationTourist,
     passenger,
     passengerReservationOneWay,
+    reservationTwoWays
   };
 }
 

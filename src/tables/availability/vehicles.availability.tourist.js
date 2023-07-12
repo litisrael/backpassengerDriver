@@ -15,16 +15,16 @@ export function createVehicleAvailabilityTourist(sequelize) {
     {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
       },
 
-      available_from: {
+      disable_from: {
         type: DataTypes.DATEONLY,
         allowNull: false,
         validate: { isAfter: currentDate },
       },
-      available_to: {
+      disable_until: {
         type: DataTypes.DATEONLY,
         allowNull: false,
         validate: { isBefore: nextYear },
@@ -40,23 +40,23 @@ export function createVehicleAvailabilityTourist(sequelize) {
   VehicleAvailability.beforeBulkCreate(async (models) => {
     for (const model of models) {
       
-      validateABeforeB(model.available_from, model.available_to);
+      validateABeforeB(model.disable_from, model.available_to);
       await validateDateNotBetweenExisting(
         model,
-        model.available_from,
-        model.available_to
+        model.disable_from,
+        model.disable_until
       )
      
     }
   });
   VehicleAvailability.beforeBulkUpdate(async(models) => {
     for (const model of models) {
-    validateAfterCurrentDate(model.available_from);
-    validateABeforeB(model.available_from, model.available_to );
+    validateAfterCurrentDate(model.disable_from);
+    validateABeforeB(model.disable_from, model.disable_until );
     await validateDateNotBetweenExisting(
       model,
-      model.available_from,
-      model.available_to
+      model.disable_from,
+      model.disable_until
     );
     }
   });

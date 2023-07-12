@@ -4,9 +4,9 @@ import {
   dayOfWeekEnum,
   getDayOfWeekInEnglish,
 } from "../utility.js";
-import {  queryAvailableDriversForTrip } from "../query/oneway.js";
+import { queryAvailableDriversForTrip } from "../query/oneway.js";
 
- let DriversForOneWay;
+let DriversForOneWay;
 
 // console.log("soy DriversForOneWay_-------___",DriversForOneWay)
 
@@ -53,33 +53,40 @@ export const createReservationOneWay = (sequelize) => {
     },
     {
       tableName: "reservation_oneway",
-   timestamps: true,
+      timestamps: true,
       schema: "extended_travel",
     }
   );
   ReservationOneWay.beforeCreate(async (model) => {
-    const dayOfWeekInEnglish =  getDayOfWeekInEnglish(model.departure_date);
+    const dayOfWeekInEnglish = getDayOfWeekInEnglish(model.departure_date);
     // console.log(dayOfWeekInEnglish);
     model.day_week = dayOfWeekInEnglish;
   });
 
   ReservationOneWay.beforeUpdate(async (model) => {
-    const dayOfWeekInEnglish = await getDayOfWeekInEnglish(model.departure_date);
+    const dayOfWeekInEnglish = await getDayOfWeekInEnglish(
+      model.departure_date
+    );
     model.day_week = dayOfWeekInEnglish;
   });
 
-  
+  ReservationOneWay.afterCreate((model) => {
+    DriversForOneWay = queryAvailableDriversForTrip(
+      sequelize,
+      model.day_week,
+      model.from_region,
+      model.id_one_way
+    );
+  });
 
-  ReservationOneWay.afterCreate( (model) => {
-    DriversForOneWay =   queryAvailableDriversForTrip(sequelize , model.day_week, model.from_region, model.id_one_way)
- })
-
- ReservationOneWay.afterUpdate( (model) => {
-   DriversForTrip =   queryAvailableDriversForTrip(sequelize , model.id)
- 
-})
-
+  ReservationOneWay.afterUpdate((model) => {
+    DriversForOneWay = queryAvailableDriversForTrip(
+      sequelize,
+      model.day_week,
+      model.from_region,
+      model.id_one_way
+    );
+  });
 
   return ReservationOneWay;
 };
-

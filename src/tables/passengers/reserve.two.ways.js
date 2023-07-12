@@ -55,8 +55,10 @@ export const createReservationTwoWays = (sequelize) => {
       schema: "extended_travel",
     }
   );
+
+
   ReservationTwoWays.beforeCreate(async (model) => {
-    const dayOfWeekInEnglish = await getDayOfWeekInEnglish(model.date);
+    const dayOfWeekInEnglish =  getDayOfWeekInEnglish(model.date);
     console.log(dayOfWeekInEnglish);
     model.day_week = dayOfWeekInEnglish;
   });

@@ -11,7 +11,7 @@ export function validateHourBeforeHour(a, b) {
   const formattedA = addLeadingZero(a);
   const formattedB = addLeadingZero(b);
 
-  if (formattedA >= formattedB) {
+  if (formattedA > formattedB) {
     throw new Error(`The ${formattedA} must be before the ${formattedB}.`);
   }
 }
