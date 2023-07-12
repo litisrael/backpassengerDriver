@@ -1,6 +1,6 @@
 import express from "express";
 import { createServers } from "./routes/index.js";
-
+import cors from "cors";
 export const initRouterDriver = async () => {
   const routers = await createServers();
   const app = express();
@@ -14,7 +14,7 @@ export const initRouterDriver = async () => {
     next();
 });
 
-
+app.use(cors());
   app.use(express.json());
   
   app.use("/company", routers.company);
@@ -26,6 +26,6 @@ export const initRouterDriver = async () => {
   app.use("/passengerReserve", routers.passengerReservation);
   app.use("/day", routers.DaysOfWeek);
   app.use("/day", routers.allDays);
-
+  app.use("/Register", routers.Register);
   return app;
 };
