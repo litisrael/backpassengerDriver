@@ -8,9 +8,10 @@ import { passengerReservationOneWay } from "./passengers/passenger.resrve.oneway
 import { dayOfWeekRouter } from "./drivers/days.of.week.js";
 import { allDaysRouter } from "./drivers/alldays.js";
 import { passengerReservationTwoWays } from "./passengers/passenger.reserve.twoways.js";
-
+import { createFormRegister } from "./drivers/transactionDriver.js";
 export async function createServers() {
   const DB = await initDB();
+  const Register = createFormRegister(DB.tables, DB.sequelize);
   const company = companyRouter(DB.tables);
   const vehiclesAvailabilityTourist = vehiclesAvailabilityTouristRouter(
     DB.tables
@@ -36,5 +37,6 @@ export async function createServers() {
     ReservationTwoWays,
     DaysOfWeek,
     allDays,
+    Register
   };
 }

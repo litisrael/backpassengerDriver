@@ -29,15 +29,8 @@ export const createCompany = (sequelize) => {
         // unique: true,
         // validate: { isNumeric: true, len: [2, 10] },
       },
-      is_work_available_multiple_days: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
-
-      shomer_shabat: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
+    
+    
       work_zone: {
 
         type: DataTypes.ARRAY(DataTypes.ENUM(regionEnum())),

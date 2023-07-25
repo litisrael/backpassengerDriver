@@ -3,9 +3,9 @@ import { DataTypes } from "sequelize";
 export const createPassenger =  (sequelize) => {
 const Passenger = sequelize.define('Passenger', {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true
+      defaultValue: DataTypes.UUIDV4,
     },
     passenger_name: {
       type: DataTypes.STRING(45),

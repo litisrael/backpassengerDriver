@@ -4,8 +4,31 @@ export function createFormRegister(DB, sequelize) {
   const FormRegister = express.Router();
   let trx = null; // Inicializa trx como null
 
+  
+  FormRegister.get("/:id", async (req, res) => {
+    const companyId = req.params.id;
+    try {
+      const company = await DB.drivers.company.findByPk(companyId, {
+        include: DB.drivers.vehicle, // Incluir los vehículos relacionados
+      });
+      if (!company) {
+        return res.status(404).json({
+          message: "Company not found",
+        });
+      }
+      return res.json({
+        company,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  });
+
+
   FormRegister.post("/", async (req, res) => {
-    console.log(req.body.data.formDays.days);
+    console.log(req.body.data);
   
     try {
       trx = await sequelize.transaction(); 
@@ -24,7 +47,8 @@ export function createFormRegister(DB, sequelize) {
       const vehicles = await DB.drivers.vehicle.bulkCreate(vehicleData, {
         transaction: trx,
       });
-      let result = [];
+      let calendarDays = [];
+      let availableTourist =[]
 
       for (const vehicle of vehicles) {
         const vehicleId = vehicle.vehicle_id;
@@ -45,14 +69,24 @@ export function createFormRegister(DB, sequelize) {
               
             });
         
-        result.push(dataDay)
+            calendarDays.push({
+              day,
+              dataDay
+            });
             // console.log(result); // Resultado de la inserción en la tabla del día
+
+            const disableCalendarData = req.body.data.calendarDisableTourist.calendarDisable.map(dates =>({
+              ...dates, vehicle_id: vehicleId,
+            }))
+    
+    
+             availableTourist = await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(disableCalendarData, {
+              transaction: trx,
+            });
+        
           }
         }
-        // const availableTourist = await DB.drivers.vehiclesAvailabilityTourist.bulkCreate("req.body.data", {
-        //   transaction: trx,
-        // });
-    
+        
         
       
       
@@ -62,7 +96,8 @@ export function createFormRegister(DB, sequelize) {
         return res.json({
           company,
           vehicles,
-          result
+           calendarDays,
+          availableTourist
         });
       })
     } catch (error) {

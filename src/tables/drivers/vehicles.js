@@ -39,6 +39,15 @@ export const createVehicle =  (sequelize) => {
         type: DataTypes.DECIMAL(5, 2),
         allowNull: true,
       },
+      shomer_shabat: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      is_available_work_multiple_days: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+
       },
       {
         tableName: "vehicles",

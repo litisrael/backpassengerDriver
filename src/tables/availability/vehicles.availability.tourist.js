@@ -21,12 +21,12 @@ export function createVehicleAvailabilityTourist(sequelize) {
 
       disable_from: {
         type: DataTypes.DATEONLY,
-        allowNull: false,
+        allowNull: true,
         validate: { isAfter: currentDate },
       },
       disable_until: {
         type: DataTypes.DATEONLY,
-        allowNull: false,
+        allowNull: true,
         validate: { isBefore: nextYear },
       },
     },
