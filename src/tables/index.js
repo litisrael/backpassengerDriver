@@ -8,6 +8,7 @@ import { createReservationOneWay } from "./passengers/reserve.one.way.js";
 // import { queryDriversOfReserve } from "../api/query/reserve.drivers.js";
 import { createDaysOfWeek } from "./availability/days.of.week.js";
 import { createReservationTwoWays } from "./passengers/reserve.two.ways.js";
+
 async function tablesDrivers(sequelize) {
   const daysOfWeek = await createDaysOfWeek(sequelize);
   const company = await createCompany(sequelize);

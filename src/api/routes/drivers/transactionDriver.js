@@ -4,33 +4,49 @@ export function createFormRegister(DB, sequelize) {
   const FormRegister = express.Router();
   let trx = null; // Inicializa trx como null
 
-  
-  FormRegister.get("/:id", async (req, res) => {
-    const companyId = req.params.id;
-    try {
-      const company = await DB.drivers.company.findByPk(companyId, {
-        include: DB.drivers.vehicle, // Incluir los vehículos relacionados
-      });
-      if (!company) {
-        return res.status(404).json({
-          message: "Company not found",
-        });
-      }
-      
-      return res.json({
-        company,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        message: error.message,
+FormRegister.get("/:id", async (req, res) => {
+  const companyId = req.params.id;
+  try {
+    const { company, vehicle, daysOfWeek, vehiclesAvailabilityTourist } = await  DB.drivers;
+
+    const companyData = await company.findByPk(companyId);
+    if (!companyData) {
+      return res.status(404).json({
+        message: "Company not found",
       });
     }
-  });
+
+    const vehicles = await vehicle.findAll({
+      where: { company_id: companyId },
+      include: [
+        ...daysOfWeek,
+        { model: vehiclesAvailabilityTourist },
+      ],
+    });
+
+    return res.json({
+      company: companyData,
+      vehicles,
+    });
+  } catch (error) {
+    console.error("Error while fetching data:", error);
+    return res.status(500).json({
+      message: "Something went wrong while fetching data",
+      error: error.message,
+    });
+  }
+});
+
+
+
+
 
 
   FormRegister.post("/", async (req, res) => {
     console.log(req.body.data);
-  
+    console.log(req.body.data.formVehicle);
+    console.log(req.body.data.formDays);
+    console.log(req.body.data.calendarDisableTourist);
     try {
       trx = await sequelize.transaction(); 
   
@@ -74,7 +90,7 @@ export function createFormRegister(DB, sequelize) {
               day,
               dataDay
             });
-            // console.log(result); // Resultado de la inserción en la tabla del día
+         
 
             const disableCalendarData = req.body.data.calendarDisableTourist.calendarDisable.map(dates =>({
               ...dates, vehicle_id: vehicleId,
