@@ -7,7 +7,7 @@ export function createFormRegister(DB, sequelize) {
 FormRegister.get("/:id", async (req, res) => {
   const companyId = req.params.id;
   try {
-    const { company, vehicle, daysOfWeek, vehiclesAvailabilityTourist } = await  DB.drivers;
+    const { company, vehicle, daysOfWeek, vehiclesAvailabilityTourist } = DB.drivers;
 
     const companyData = await company.findByPk(companyId);
     if (!companyData) {
