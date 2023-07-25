@@ -16,6 +16,7 @@ export function createFormRegister(DB, sequelize) {
           message: "Company not found",
         });
       }
+      
       return res.json({
         company,
       });
