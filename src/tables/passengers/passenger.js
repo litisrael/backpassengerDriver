@@ -7,6 +7,11 @@ const Passenger = sequelize.define('Passenger', {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
+    auth0_user_id: {
+      type: DataTypes.UUID, // Puedes ajustar el tipo de dato según el ID único de Auth0
+      allowNull: false,
+      unique: true,
+    },
     passenger_name: {
       type: DataTypes.STRING(45),
       allowNull: false,
