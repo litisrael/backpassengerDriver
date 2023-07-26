@@ -43,10 +43,11 @@ FormRegister.get("/:id", async (req, res) => {
 
 
   FormRegister.post("/", async (req, res) => {
-    console.log(req.body.data);
-    console.log(req.body.data.formVehicle);
-    console.log(req.body.data.formDays);
-    console.log(req.body.data.calendarDisableTourist);
+  
+    // console.log(req.body.data);
+    // console.log(req.body.data.formVehicle);
+    // console.log(req.body.data.formDays);
+    // console.log(req.body.data.calendarDisableTourist);
     try {
       trx = await sequelize.transaction(); 
   
@@ -65,11 +66,21 @@ FormRegister.get("/:id", async (req, res) => {
         transaction: trx,
       });
       let calendarDays = [];
+
       let availableTourist =[]
 
       for (const vehicle of vehicles) {
         const vehicleId = vehicle.vehicle_id;
       
+        
+        const disableCalendarData = req.body.data.calendarDisableTourist.calendarDisable.map(dates =>({
+          ...dates, vehicle_id: vehicleId,
+        }))
+
+
+         availableTourist = await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(disableCalendarData, {
+          transaction: trx,
+        });
         for (const dayData of req.body.data.formDays.days) {
           const { day, data } = dayData;
           const table = DB.drivers.daysOfWeek.find(
@@ -91,15 +102,6 @@ FormRegister.get("/:id", async (req, res) => {
               dataDay
             });
          
-
-            const disableCalendarData = req.body.data.calendarDisableTourist.calendarDisable.map(dates =>({
-              ...dates, vehicle_id: vehicleId,
-            }))
-    
-    
-             availableTourist = await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(disableCalendarData, {
-              transaction: trx,
-            });
         
           }
         }
