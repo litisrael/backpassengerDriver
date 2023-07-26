@@ -12,7 +12,7 @@ export const createCompany = (sequelize) => {
         primaryKey: true,
        
       },
-      authId: {
+      auth_id: {
         type: DataTypes.STRING(80), // Puedes ajustar el tipo de dato según el ID único de Auth0
         allowNull: false,
         // unique: true,

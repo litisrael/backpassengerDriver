@@ -4,39 +4,44 @@ export function createFormRegister(DB, sequelize) {
   const FormRegister = express.Router();
   let trx = null; // Inicializa trx como null
 
-FormRegister.get("/:id", async (req, res) => {
-  const companyId = req.params.id;
-  try {
-    const { company, vehicle, daysOfWeek, vehiclesAvailabilityTourist } = DB.drivers;
-
-    const companyData = await company.findByPk(companyId);
-    if (!companyData) {
-      return res.status(404).json({
-        message: "Company not found",
+  FormRegister.get("/:auth0Id", async (req, res) => {
+    const auth0Id = req.params.auth0Id;
+    try {
+      const { company, vehicle, daysOfWeek, vehiclesAvailabilityTourist } = DB.drivers;
+  
+      // Buscar la compañía basada en el auth_id
+      const companyData = await company.findOne({
+        where: { auth_id: auth0Id },
+        include: [
+          {
+            model: vehicle,
+            include: [
+              ...daysOfWeek,
+              { model: vehiclesAvailabilityTourist },
+            ],
+          },
+        ],
+      });
+  
+      if (!companyData) {
+        return res.status(404).json({
+          message: "Company not found for the given auth_id",
+        });
+      }
+  
+      return res.json({
+        company: companyData,
+        vehicles: companyData.vehicles,
+      });
+    } catch (error) {
+      console.error("Error while fetching data:", error);
+      return res.status(500).json({
+        message: "Something went wrong while fetching data",
+        error: error.message,
       });
     }
-
-    const vehicles = await vehicle.findAll({
-      where: { company_id: companyId },
-      include: [
-        ...daysOfWeek,
-        { model: vehiclesAvailabilityTourist },
-      ],
-    });
-
-    return res.json({
-      company: companyData,
-      vehicles,
-    });
-  } catch (error) {
-    console.error("Error while fetching data:", error);
-    return res.status(500).json({
-      message: "Something went wrong while fetching data",
-      error: error.message,
-    });
-  }
-});
-
+  });
+  
 
 
 
