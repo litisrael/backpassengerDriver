@@ -47,15 +47,15 @@ export function passengerRouter(DB) {
     }
   });
 
-  passengerRouter.put("/:passenger_id", async (req, res) => {
-    const { passenger_id } = req.params;
+  passengerRouter.put("/:auth_id", async (req, res) => {
+    const { auth_id } = req.params;
 
     try {
-      const passenger = await DB.passengers.passenger.findByPk(passenger_id);
+      const passenger = await DB.passengers.passenger.findOne({ where: { auth_id: auth_id } });
       if (!passenger) {
         return res
           .status(404)
-          .json({ message: `Passenger with id ${passenger_id} not found` });
+          .json({ message: `Passenger with auth_id ${auth_id} not found` });
       }
 
       await passenger.update(req.body);
