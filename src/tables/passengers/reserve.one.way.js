@@ -21,27 +21,40 @@ export const createReservationOneWay = (sequelize) => {
       },
       number_of_passengers: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       from_region: {
         type: DataTypes.ENUM(...regionEnum()),
-        allowNull: false,
+        allowNull: true,
       },
       from_street: {
         type: DataTypes.STRING,
         allowNull: true,
+
       },
+
+        coordinates_origin: {
+    type: DataTypes.GEOGRAPHY("POINT"), // Aquí utilizamos el tipo Geography y especificamos POINT para coordenadas de un solo punto
+    allowNull: true, // Si las coordenadas pueden ser nulas, establece esta opción a true
+  },
+
+  coordinates_destine: {
+    type: DataTypes.GEOGRAPHY("POINT"),
+    allowNull: true,
+  },
+
+
       to_city: {
         type: DataTypes.ENUM(...regionEnum()),
         allowNull: true,
       },
       to_street: {
         type: DataTypes.STRING,
-        allowNull: true,
+        // allowNull: true,
       },
       departure_date: {
         type: DataTypes.DATEONLY,
-        allowNull: true,
+        // allowNull: true,
       },
       day_week: {
         type: DataTypes.ENUM(...dayOfWeekEnum()),

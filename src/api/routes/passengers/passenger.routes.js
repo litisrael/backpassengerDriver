@@ -27,15 +27,17 @@ export function passengerRouter(DB) {
     }
   });
 
-  passengerRouter.get("/:passenger_id", async (req, res) => {
-    const { passenger_id } = req.params;
+  passengerRouter.get("/:authId", async (req, res) => {
+    const { authId } = req.params;
 
     try {
-      const passenger = await DB.passengers.passenger.findByPk(passenger_id);
+  
+      const passenger = await DB.passengers.passenger.findOne({ where: { auth_id: authId } });
+
       if (!passenger) {
         return res
           .status(404)
-          .json({ message: `Passenger with id ${passenger_id} not found` });
+          .json({ message: `Passenger with authId ${authId} not found` });
       }
       return res.json(passenger);
     } catch (error) {
