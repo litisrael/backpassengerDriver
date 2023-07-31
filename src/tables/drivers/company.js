@@ -34,26 +34,32 @@ export const createCompany = (sequelize) => {
         // unique: true,
         // validate: { isNumeric: true, len: [2, 10] },
       },
-    
-    
       work_zone: {
-
-        type: DataTypes.ARRAY(DataTypes.ENUM(regionEnum())),
-        allowNull: false,
-        validate: {
-          isValidValues: function (value) {
-            const validValues = regionEnum();
-            const invalidValues = value.filter(
-              (val) => !validValues.includes(val)
-            );
-            if (invalidValues.length > 0) {
-              throw new Error(
-                `Invalid city values: ${invalidValues.join(", ")}`
-              );
-            }
-          },
-        },
+        type: DataTypes.GEOGRAPHY("POINT"),
+        allowNull: true, // Si las coordenadas pueden ser nulas, establece esta opción a true
       },
+      radius: {
+        type: DataTypes.DOUBLE, // Podemos usar DOUBLE o FLOAT para almacenar el radio en kilómetros
+        allowNull: true,
+      },
+      // work_zone: {
+
+      //   type: DataTypes.ARRAY(DataTypes.ENUM(regionEnum())),
+      //   allowNull: false,
+      //   validate: {
+      //     isValidValues: function (value) {
+      //       const validValues = regionEnum();
+      //       const invalidValues = value.filter(
+      //         (val) => !validValues.includes(val)
+      //       );
+      //       if (invalidValues.length > 0) {
+      //         throw new Error(
+      //           `Invalid city values: ${invalidValues.join(", ")}`
+      //         );
+      //       }
+      //     },
+      //   },
+      // },
       // languages: {
       //   type: DataTypes.ARRAY(DataTypes.STRING(30)),
       //   allowNull: true,
