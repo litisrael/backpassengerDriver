@@ -42,28 +42,7 @@ export const createCompany = (sequelize) => {
         type: DataTypes.DOUBLE, // Podemos usar DOUBLE o FLOAT para almacenar el radio en kilómetros
         allowNull: true,
       },
-      // work_zone: {
-
-      //   type: DataTypes.ARRAY(DataTypes.ENUM(regionEnum())),
-      //   allowNull: false,
-      //   validate: {
-      //     isValidValues: function (value) {
-      //       const validValues = regionEnum();
-      //       const invalidValues = value.filter(
-      //         (val) => !validValues.includes(val)
-      //       );
-      //       if (invalidValues.length > 0) {
-      //         throw new Error(
-      //           `Invalid city values: ${invalidValues.join(", ")}`
-      //         );
-      //       }
-      //     },
-      //   },
-      // },
-      // languages: {
-      //   type: DataTypes.ARRAY(DataTypes.STRING(30)),
-      //   allowNull: true,
-      // },
+ 
     },
     {
       tableName: "company",

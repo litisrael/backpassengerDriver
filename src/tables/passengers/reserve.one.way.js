@@ -8,7 +8,6 @@ import { queryAvailableDriversForTrip } from "../query/oneway.js";
 
 let DriversForOneWay;
 
-// console.log("soy DriversForOneWay_-------___",DriversForOneWay)
 
 export const createReservationOneWay = (sequelize) => {
   const ReservationOneWay = sequelize.define(
@@ -23,35 +22,26 @@ export const createReservationOneWay = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      from_region: {
-        type: DataTypes.ENUM(...regionEnum()),
-        allowNull: true,
-      },
-      from_street: {
+
+      from_address: {
         type: DataTypes.STRING,
         allowNull: true,
-
       },
 
-        coordinates_origin: {
-    type: DataTypes.GEOGRAPHY("POINT"), // Aquí utilizamos el tipo Geography y especificamos POINT para coordenadas de un solo punto
-    allowNull: true, // Si las coordenadas pueden ser nulas, establece esta opción a true
-  },
-
-  coordinates_destine: {
-    type: DataTypes.GEOGRAPHY("POINT"),
-    allowNull: true,
-  },
-
-
-      to_city: {
-        type: DataTypes.ENUM(...regionEnum()),
+      to_address: {
+        type: DataTypes.STRING,
         allowNull: true,
       },
-      to_street: {
-        type: DataTypes.STRING,
-        // allowNull: true,
+      coordinates_origin: {
+        type: DataTypes.GEOGRAPHY("POINT"), // Aquí utilizamos el tipo Geography y especificamos POINT para coordenadas de un solo punto
+        allowNull: true, // Si las coordenadas pueden ser nulas, establece esta opción a true
       },
+
+      coordinates_destine: {
+        type: DataTypes.GEOGRAPHY("POINT"),
+        allowNull: true,
+      },
+
       departure_date: {
         type: DataTypes.DATEONLY,
         // allowNull: true,
@@ -87,7 +77,7 @@ export const createReservationOneWay = (sequelize) => {
     DriversForOneWay = queryAvailableDriversForTrip(
       sequelize,
       model.day_week,
-      model.from_region,
+      model.coordinates_origin,
       model.id_one_way
     );
   });
@@ -96,8 +86,9 @@ export const createReservationOneWay = (sequelize) => {
     DriversForOneWay = queryAvailableDriversForTrip(
       sequelize,
       model.day_week,
-      model.from_region,
+      model.coordinates_origin,
       model.id_one_way
+      
     );
   });
 
