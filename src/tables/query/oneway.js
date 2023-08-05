@@ -1,12 +1,8 @@
 
-export async function queryAvailableDriversForTrip(sequelize, dayOfWeek, coordinates_origin ,id_one_way) {
+export async function queryAvailableDriversForTrip(sequelize, dayOfWeek ,id_one_way) {
 
 
-console.log(coordinates_origin,"-----------coordinates_origin----------");
 
-
-const latitude = coordinates_origin.coordinates[0];
-const longitude = coordinates_origin.coordinates[1];
 
   try {
     const results = await sequelize.query(`
@@ -14,12 +10,12 @@ const longitude = coordinates_origin.coordinates[1];
     FROM extended_travel.company AS c
     JOIN extended_travel.vehicles AS v ON c.company_id = v.company_id
     LEFT JOIN availability_drivers.${dayOfWeek} AS a ON v.vehicle_id = a.vehicle_id
-  JOIN extended_travel.reservation_oneway AS r ON ST_DWithin(ST_MakePoint(${latitude}, ${longitude})::geography, c.work_zone::geography, c.radius)
+    JOIN extended_travel.reservation_oneway AS r ON ST_DWithin(r.coordinates_destine::geography, c.work_zone::geography, c.radius)
     JOIN extended_travel.passenger AS p ON p.id = r.passenger_id
     WHERE r.number_of_passengers <= (
       SELECT number_of_seats FROM extended_travel.vehicles WHERE vehicle_id = v.vehicle_id
     )
-    AND (a IS NULL OR (r.day_week = '${dayOfWeek}' AND r.departure_hour NOT BETWEEN a.unavailable_starting AND a.unavailable_until))
+    AND (a IS NULL OR (r.day_week = '${dayOfWeek}' AND (a.unavailable_starting IS NULL OR a.unavailable_until IS NULL OR r.departure_hour NOT BETWEEN a.unavailable_starting AND a.unavailable_until)))
     AND r.id_one_way = ${id_one_way};
   `);
 

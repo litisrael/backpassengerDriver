@@ -77,7 +77,6 @@ export const createReservationOneWay = (sequelize) => {
     DriversForOneWay = queryAvailableDriversForTrip(
       sequelize,
       model.day_week,
-      model.coordinates_origin,
       model.id_one_way
     );
   });
