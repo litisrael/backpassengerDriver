@@ -14,9 +14,10 @@ export const createReservationOneWay = (sequelize) => {
     "ReservationOneWay",
     {
       id_one_way: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
+    
       },
       number_of_passengers: {
         type: DataTypes.INTEGER,

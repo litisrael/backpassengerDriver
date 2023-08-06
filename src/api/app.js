@@ -27,5 +27,6 @@ app.use(cors());
   app.use("/day", routers.DaysOfWeek);
   app.use("/day", routers.allDays);
   app.use("/Register", routers.Register);
+  app.use("/responseoneway", routers.responseOneway);
   return app;
 };
