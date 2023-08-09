@@ -10,6 +10,7 @@ import { allDaysRouter } from "./drivers/alldays.js";
 import { passengerReservationTwoWays } from "./passengers/passenger.reserve.twoways.js";
 import { createFormRegister } from "./drivers/transactionDriver.js";
 import { responseDriverOneWay } from "./responseDriverRoutes/response.one.way.js";
+import { getDriversAvailableOneWay } from "./drivers/gateData/oneWayAvailable.js";
 
 
 export async function createServers() {
@@ -30,6 +31,7 @@ export async function createServers() {
   );
   const allDays = allDaysRouter(DB.tables);
 const responseOneway = responseDriverOneWay(DB.tables)
+const getDriverAvailable = getDriversAvailableOneWay(DB)
   return {
     company,
     vehiclesAvailabilityTourist,
@@ -41,7 +43,8 @@ const responseOneway = responseDriverOneWay(DB.tables)
     DaysOfWeek,
     allDays,
     Register,
-    responseOneway
+    responseOneway,
+    getDriverAvailable
 
   };
 }
