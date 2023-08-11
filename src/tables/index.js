@@ -78,6 +78,7 @@ async function tablesPassenger(sequelize) {
   const passengerReservationOneWay = await createReservationOneWay(sequelize);
    const reservationTwoWays = await createReservationTwoWays(sequelize)
 
+
   passenger.hasMany(passengerReservationOneWay, {
     foreignKey: { name: "passenger_id", allowNull: false },
   });
@@ -123,6 +124,12 @@ async function tablesPrices(sequelize) {
  const responseOneWay =  await createResponseOneWay(sequelize)
  const reservationTwoWays = await createReservationTwoWays(sequelize)
  const responseTwoWays =  await createResponseTwoWays(sequelize)
+ const company = await createCompany(sequelize);
+
+ responseOneWay.belongsTo(company, {
+  foreignKey: { name: 'company_id', allowNull: false },
+});
+
 
  reservationTwoWays.hasMany(responseTwoWays, {
   foreignKey: { name: "id", allowNull: false },
@@ -130,6 +137,8 @@ async function tablesPrices(sequelize) {
 responseTwoWays.belongsTo(reservationTwoWays, {
   foreignKey: { name: "id",  allowNull: false },
 });
+
+
 
   passengerReservationOneWay.hasMany(responseOneWay, {
     foreignKey: { name: "id_one_way", allowNull: false },

@@ -28,7 +28,10 @@ export function getDriversAvailableOneWay(DB) {
                     (wed.unavailable_starting IS NULL OR wed.unavailable_until IS NULL OR r.departure_hour NOT BETWEEN wed.unavailable_starting AND wed.unavailable_until OR wed IS NULL) AND
                     (thu.unavailable_starting IS NULL OR thu.unavailable_until IS NULL OR r.departure_hour NOT BETWEEN thu.unavailable_starting AND thu.unavailable_until OR thu IS NULL) AND
                     (fri.unavailable_starting IS NULL OR fri.unavailable_until IS NULL OR r.departure_hour NOT BETWEEN fri.unavailable_starting AND fri.unavailable_until OR fri IS NULL) AND
-                    (sat.unavailable_starting IS NULL OR sat.unavailable_until IS NULL OR r.departure_hour NOT BETWEEN sat.unavailable_starting AND sat.unavailable_until OR sat IS NULL)
+                    (sat.unavailable_starting IS NULL OR sat.unavailable_until IS NULL OR r.departure_hour NOT BETWEEN sat.unavailable_starting AND sat.unavailable_until OR sat IS NULL) AND
+                    r.number_of_passengers <= (
+                        SELECT number_of_seats FROM extended_travel.vehicles WHERE vehicle_id = v.vehicle_id
+                    )
                     AND c.company_id = (
                         SELECT company_id
                         FROM extended_travel.company
