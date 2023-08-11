@@ -9,7 +9,7 @@ import { dayOfWeekRouter } from "./drivers/days.of.week.js";
 import { allDaysRouter } from "./drivers/alldays.js";
 import { passengerReservationTwoWays } from "./passengers/passenger.reserve.twoways.js";
 import { createFormRegister } from "./drivers/transactionDriver.js";
-import { responseDriverOneWay } from "./responseDriverRoutes/response.one.way.js";
+import { responseDriverOneWay } from "./drivers/responseDriverRoutes/response.one.way.js";
 import { getDriversAvailableOneWay } from "./drivers/gateData/oneWayAvailable.js";
 
 
