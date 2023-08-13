@@ -3,12 +3,12 @@ import express from "express";
 
 export function responseDriverOneWay(DB) {
   const crud = DB.responseDriver.responseOneWay
-// por el momento  id_one_way esta viniendo por body enves de param
     const responseDriver = express.Router();
-    responseDriver.post("/", async (req, res) => {
+    responseDriver.post("/:id_one_way", async (req, res) => {
       const { id_one_way } = req.params;
       try {
-        const newResponse = await crud.create(req.body );
+        const newResponse = await crud.create({  ...req.body,
+          id_one_way,});
         return res.json(newResponse);
       } catch (error) {
         return res.status(500).json({
@@ -35,8 +35,13 @@ export function responseDriverOneWay(DB) {
 
     
 
+
     try {
-      const trip = await crud.findByPk(id_one_way)
+      const trip = await crud.findAll({
+        where: {
+          id_one_way: id_one_way,
+        },
+      });
       
       if (!trip) {
         return res.status(404).json({

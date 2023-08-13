@@ -1,7 +1,7 @@
 import express from "express";
 
 export function getDriversAvailableOneWay(DB) {
-
+// creo que es mejor mdificar  q sean solo join y no left join
     const DriversAvailable = express.Router();
     DriversAvailable.get("/:auth_id", async (req, res) => {
         const { auth_id } = req.params;
@@ -11,14 +11,14 @@ export function getDriversAvailableOneWay(DB) {
                 SELECT DISTINCT *
                 FROM extended_travel.company AS c
                 JOIN extended_travel.vehicles AS v ON c.company_id = v.company_id
-                LEFT JOIN availability_drivers.Sunday AS sun ON v.vehicle_id = sun.vehicle_id
-                LEFT JOIN availability_drivers.Monday AS mon ON v.vehicle_id = mon.vehicle_id
-                LEFT JOIN availability_drivers.Tuesday AS tue ON v.vehicle_id = tue.vehicle_id
-                LEFT JOIN availability_drivers.Wednesday AS wed ON v.vehicle_id = wed.vehicle_id
-                LEFT JOIN availability_drivers.Thursday AS thu ON v.vehicle_id = thu.vehicle_id
-                LEFT JOIN availability_drivers.Friday AS fri ON v.vehicle_id = fri.vehicle_id
-                LEFT JOIN availability_drivers.Saturday AS sat ON v.vehicle_id = sat.vehicle_id
-                LEFT JOIN extended_travel.reservation_oneway AS r ON ST_DWithin(r.coordinates_destine::geography, c.work_zone::geography, c.radius)
+                 JOIN availability_drivers.Sunday AS sun ON v.vehicle_id = sun.vehicle_id
+                 JOIN availability_drivers.Monday AS mon ON v.vehicle_id = mon.vehicle_id
+                 JOIN availability_drivers.Tuesday AS tue ON v.vehicle_id = tue.vehicle_id
+                 JOIN availability_drivers.Wednesday AS wed ON v.vehicle_id = wed.vehicle_id
+                 JOIN availability_drivers.Thursday AS thu ON v.vehicle_id = thu.vehicle_id
+                 JOIN availability_drivers.Friday AS fri ON v.vehicle_id = fri.vehicle_id
+                 JOIN availability_drivers.Saturday AS sat ON v.vehicle_id = sat.vehicle_id
+                 JOIN extended_travel.reservation_oneway AS r ON ST_DWithin(r.coordinates_destine::geography, c.work_zone::geography, c.radius)
                 OR ST_DWithin(r.coordinates_origin::geography, c.work_zone::geography, c.radius)
                 JOIN extended_travel.passenger AS p ON p.id = r.passenger_id
                 WHERE 
@@ -58,6 +58,5 @@ export function getDriversAvailableOneWay(DB) {
             });
         }
     });
-
     return DriversAvailable;
 }

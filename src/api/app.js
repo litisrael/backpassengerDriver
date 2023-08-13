@@ -29,5 +29,6 @@ app.use(cors());
   app.use("/Register", routers.Register);
   app.use("/responseoneway", routers.responseOneway);
   app.use("/GetAvailableOneWay", routers.getDriverAvailable);
+  app.use("/PricesOneWay", routers.PricesOneWayPassenger);
   return app;
 };
