@@ -1,6 +1,7 @@
 import express from "express";
 
 export function createFormRegister(DB, sequelize) {
+  
   const FormRegister = express.Router();
   let trx = null; // Inicializa trx como null
 

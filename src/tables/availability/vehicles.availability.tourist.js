@@ -37,18 +37,18 @@ export function createVehicleAvailabilityTourist(sequelize) {
     }
   );
   // beforeBulkCreate / beforeBulkUpdate
-  VehicleAvailability.beforeBulkCreate(async (models) => {
-    for (const model of models) {
+  // VehicleAvailability.beforeBulkCreate(async (models) => {
+  //   for (const model of models) {
       
-      validateABeforeB(model.disable_from, model.available_to);
-      await validateDateNotBetweenExisting(
-        model,
-        model.disable_from,
-        model.disable_until
-      )
+  //     validateABeforeB(model.disable_from, model.available_to);
+  //     await validateDateNotBetweenExisting(
+  //       model,
+  //       model.disable_from,
+  //       model.disable_until
+  //     )
      
-    }
-  });
+  //   }
+  // });
   VehicleAvailability.beforeBulkUpdate(async(models) => {
     for (const model of models) {
     validateAfterCurrentDate(model.disable_from);
