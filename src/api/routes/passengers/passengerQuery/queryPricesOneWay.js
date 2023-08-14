@@ -3,19 +3,27 @@ import express from "express";
 export function queryPricesOneWayPassenger(DB) {
   const PricesOfDriversOneway = express.Router();
 
-  PricesOfDriversOneway.get("/:PassengerId", async (req, res) => {
-    const { PassengerId } = req.params;
+  PricesOfDriversOneway.get("/:auth_id", async (req, res) => {
+    const { auth_id } = req.params;
 
     try {
       const query = `
-        SELECT r.*
-        FROM extended_travel.reservation_oneway pr
-        INNER JOIN extended_travel.responseoneway r ON pr.id_one_way = r.id_one_way
-        WHERE pr.passenger_id = :PassengerId;
+      SELECT
+      p.auth_id , r.* , pr.*, c.*
+   FROM
+     extended_travel.passenger p
+   INNER JOIN
+     extended_travel.reservation_oneway pr ON p.id = pr.passenger_id
+   INNER JOIN
+     extended_travel.responseoneway r ON pr.id_one_way = r.id_one_way
+     INNER JOIN
+  extended_travel.company c ON r.company_id = c.company_id
+   WHERE
+     p.auth_id = 'google-oauth2|104855243921331044464';
       `;
 
       const results = await DB.sequelize.query(query, {
-        replacements: { PassengerId: PassengerId },
+        replacements: { auth_id: auth_id },
         type: DB.sequelize.QueryTypes.SELECT,
       });
 
