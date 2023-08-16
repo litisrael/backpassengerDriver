@@ -2,17 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { Sequelize } from "sequelize";
 
-
-// POSTGRES_URL="postgres://default:3giXyq9dpMVZ@ep-royal-flower-18061638-pooler.eu-central-1.postgres.vercel-storage.com:5432/verceldb"
-// POSTGRES_PRISMA_URL="postgres://default:3giXyq9dpMVZ@ep-royal-flower-18061638-pooler.eu-central-1.postgres.vercel-storage.com:5432/verceldb?pgbouncer=true&connect_timeout=15"
-// POSTGRES_URL_NON_POOLING="postgres://default:3giXyq9dpMVZ@ep-royal-flower-18061638.eu-central-1.postgres.vercel-storage.com:5432/verceldb"
-// POSTGRES_USER="default"
-// POSTGRES_HOST="ep-royal-flower-18061638-pooler.eu-central-1.postgres.vercel-storage.com"
-
-
-
-
-
 export const getConnection = async () => {
   const sequelize = new Sequelize({
     dialect: 'postgres',
