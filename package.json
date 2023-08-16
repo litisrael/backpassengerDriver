@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "vercel-build": "juajua"
+    "dev": "nodemon src/index.js"
+ 
   },
   "keywords": [],
   "author": "",
