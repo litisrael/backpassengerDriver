@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { Sequelize } from "sequelize";
 
+// esto es de vercel
+
 // export const getConnection = async () => {
 //   const sequelize = new Sequelize({
 //     dialect: 'postgres',
