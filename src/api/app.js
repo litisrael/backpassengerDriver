@@ -1,6 +1,7 @@
 import express from "express";
 import { createServers } from "./routes/index.js";
 import cors from "cors";
+
 export const initRouterDriver = async () => {
   const routers = await createServers();
   const app = express();
@@ -32,3 +33,5 @@ app.use(cors());
   app.use("/PricesOneWay", routers.PricesOneWayPassenger);
   return app;
 };
+
+export const app = await initRouterDriver();
