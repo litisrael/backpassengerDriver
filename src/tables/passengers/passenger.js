@@ -22,7 +22,13 @@ const Passenger = sequelize.define('Passenger', {
     },
     passenger_cell: {
       type: DataTypes.STRING(20),
-      allowNull: false
+      allowNull: false,
+      // validate: {
+      //   len: {
+      //     args: [4, 12], // Allowed length range (minimum, maximum)
+      //     msg: 'The number must have exactly 10 digits.' // Custom error message
+      //   }
+      // }
     }
     
   },  {

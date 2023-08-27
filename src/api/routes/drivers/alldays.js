@@ -85,7 +85,6 @@ export  function allDaysRouter(DB) {
   }
 
   // Función para actualizar registros existentes
-  // Función para actualizar registros existentes
 async function updateDays(req, res) {
   try {
     const updatedDaysData = [];

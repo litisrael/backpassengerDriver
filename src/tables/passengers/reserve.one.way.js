@@ -22,6 +22,13 @@ export const createReservationOneWay = (sequelize) => {
       number_of_passengers: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        validate: {
+          checkPassengerRange(value) {
+            if (value !== null && (value < 15 || value > 65)) {
+              throw new Error('Number of passengers must be between 15 and 65.');
+            }
+          }
+        }
       },
 
       from_address: {

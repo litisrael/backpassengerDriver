@@ -1,9 +1,11 @@
 import express from "express";
+import {   dayOfWeekString} from "../../../tables/utility.js";
 
 export function createFormRegister(DB, sequelize) {
   
   const FormRegister = express.Router();
   let trx = null; // Inicializa trx como null
+
 
   FormRegister.get("/:auth0Id", async (req, res) => {
     const auth0Id = req.params.auth0Id;
@@ -138,5 +140,110 @@ export function createFormRegister(DB, sequelize) {
   });
   
 
+
+
+  FormRegister.put("/:auth0Id", async (req, res) => {
+    const auth0Id = req.params.auth0Id;
+
+      trx = await sequelize.transaction();
+      try {
+      const { company, vehicle, daysOfWeek, vehiclesAvailabilityTourist } = DB.drivers;
+  
+      // Buscar la compañía basada en el auth_id
+      const companyData = await company.findOne({
+        where: { auth_id: auth0Id },
+        include: [
+          {
+            model: vehicle,
+            include: [
+              ...daysOfWeek,
+              { model: vehiclesAvailabilityTourist },
+            ],
+          },
+        ],
+        transaction: trx,
+      });
+  
+      if (!companyData) {
+        return res.status(404).json({
+          message: "Company not found for the given auth_id",
+        });
+      }
+  
+      // Actualizar información de la compañía
+      await company.update(req.body.company, {
+        where: { auth_id: auth0Id },
+        transaction: trx,
+      });
+  
+      // Actualizar información de los vehículos
+      for (const vehicleData of req.body.company.Vehicles) {
+        const vehicleId = vehicleData.vehicle_id;
+        
+        // Actualizar información del vehículo
+        await vehicle.update(vehicleData, {
+          where: { vehicle_id: vehicleId },
+          transaction: trx,
+        });
+      
+        // Actualizar disponibilidad de turistas para el vehículo actual
+        for (const availabilityData of vehicleData.VehicleAvailabilities) {
+          const availabilityId = availabilityData.id;
+      
+          // Obtener el modelo de disponibilidad de turistas por ID
+          const availability = await vehiclesAvailabilityTourist.findByPk(availabilityId);
+      
+          if (availability) {
+            // Actualizar los datos de disponibilidad de turistas
+            await availability.update(availabilityData, {
+              transaction: trx,
+            });
+          }
+        }
+      
+        // Acceder a los datos de los días para el vehículo actual
+        const days = ['Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays', 'Sundays'];
+
+        for (const dayProperty of days) {
+          const table = DB.drivers.daysOfWeek.find((table) => table.tableName === dayProperty);
+          const dayDataList = vehicleData[dayProperty];
+  
+          console.log(`Updating records for ${dayProperty}`);
+          for (const dayData of dayDataList) {
+            const dayDataId = dayData.id;
+            console.log(`Updating record with ID: ${dayDataId}`);
+  
+            try {
+              await table.update(dayData, {
+                where: { id: dayDataId },
+                transaction: trx,
+              });
+              console.log(`Record updated successfully`);
+            } catch (updateError) {
+              console.error(`Error while updating record:`, updateError);
+            }
+          }
+        }
+      }
+  
+      await trx.commit();
+  
+      return res.json({
+        message: "Data updated successfully",
+      });
+    } catch (error) {
+      console.error("Error while updating data:", error);
+  
+      if (trx) {
+        await trx.rollback();
+      }
+  
+      return res.status(500).json({
+        message: "Something went wrong while updating data",
+        error: error.message,
+      });
+    }
+  });
+  
   return FormRegister;
 }

@@ -8,8 +8,8 @@ export function passengerRouter(DB) {
       const newPassenger = await DB.passengers.passenger.create(req.body);
       return res.json(newPassenger);
     } catch (error) {
-      res.status(500).json({
-        message: error.message,
+      return res.status(400).json({
+        message: error.message, // Enviar el mensaje de error al front-end
       });
     }
   });
@@ -21,7 +21,7 @@ export function passengerRouter(DB) {
       );
       return res.json(passengers);
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         message: error.message,
       });
     }
@@ -41,7 +41,7 @@ export function passengerRouter(DB) {
       }
       return res.json(passenger);
     } catch (error) {
-      res.status(500).json({
+     return res.status(500).json({
         message: error.message,
       });
     }
@@ -62,7 +62,7 @@ export function passengerRouter(DB) {
 
       return res.json(passenger);
     } catch (error) {
-      res.status(500).json({
+     return res.status(500).json({
         message: error.message,
       });
     }
@@ -85,7 +85,7 @@ export function passengerRouter(DB) {
         message: "Successfully deleted",
       });
     } catch (error) {
-      res.status(500).json({
+     return res.status(500).json({
         message: error.message,
       });
     }

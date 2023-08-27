@@ -1,104 +1,104 @@
-import express from "express";
+// import express from "express";
 
 
-export function passengerReservationOneWay(DB) {
-  const passengerReservationOneWay = express.Router();
+// export function passengerReservationOneWay(DB) {
+//   const passengerReservationOneWay = express.Router();
 
-  passengerReservationOneWay.post("/", async (req, res) => {
-    console.log(req.body)
-    try {
-      const newReservation = await DB.passengers.passengerReservationOneWay.create(req.body);
+//   passengerReservationOneWay.post("/", async (req, res) => {
+//     console.log(req.body)
+//     try {
+//       const newReservation = await DB.passengers.passengerReservationOneWay.create(req.body);
 
 
-      return res.json({newReservation});
-    } catch (error) {
-      res.status(500).json({
-        message: error.message,
-      });
-    }
-  });
+//       return res.json({newReservation});
+//     } catch (error) {
+//       res.status(500).json({
+//         message: error.message,
+//       });
+//     }
+//   });
 
-  passengerReservationOneWay.get("/", async (req, res) => {
-    try {
-      const reservations = await DB.passengers.passengerReservationOneWay.findAll(
+//   passengerReservationOneWay.get("/", async (req, res) => {
+//     try {
+//       const reservations = await DB.passengers.passengerReservationOneWay.findAll(
        
-      );
-      return res.json(reservations);
-    } catch (error) {
-      res.status(500).json({
-        message: error.message,
-      });
-    }
-  });
+//       );
+//       return res.json(reservations);
+//     } catch (error) {
+//       res.status(500).json({
+//         message: error.message,
+//       });
+//     }
+//   });
 
-  passengerReservationOneWay.get("/:reservation_id", async (req, res) => {
-    const { reservation_id } = req.params;
+//   passengerReservationOneWay.get("/:reservation_id", async (req, res) => {
+//     const { reservation_id } = req.params;
 
-    try {
-      const reservation = await DB.passengers.passengerReservationOneWay.findByPk(
-        reservation_id
-      );
-      if (!reservation) {
-        return res
-          .status(404)
-          .json({ message: `Reservation with id ${reservation_id} not found` });
-      }
-      return res.json(reservation);
-    } catch (error) {
-      res.status(500).json({
-        message: error.message,
-      });
-    }
-  });
+//     try {
+//       const reservation = await DB.passengers.passengerReservationOneWay.findByPk(
+//         reservation_id
+//       );
+//       if (!reservation) {
+//         return res
+//           .status(404)
+//           .json({ message: `Reservation with id ${reservation_id} not found` });
+//       }
+//       return res.json(reservation);
+//     } catch (error) {
+//       res.status(500).json({
+//         message: error.message,
+//       });
+//     }
+//   });
 
-  passengerReservationOneWay.put("/:reservation_id", async (req, res) => {
-    const { reservation_id } = req.params;
+//   passengerReservationOneWay.put("/:reservation_id", async (req, res) => {
+//     const { reservation_id } = req.params;
 
-    try {
-      const reservation = await DB.passengers.passengerReservationOneWay.findByPk(
-        reservation_id
-      );
-      if (!reservation) {
-        return res
-          .status(404)
-          .json({ message: `Reservation with id ${reservation_id} not found` });
-      }
+//     try {
+//       const reservation = await DB.passengers.passengerReservationOneWay.findByPk(
+//         reservation_id
+//       );
+//       if (!reservation) {
+//         return res
+//           .status(404)
+//           .json({ message: `Reservation with id ${reservation_id} not found` });
+//       }
 
-      await reservation.update(req.body);
+//       await reservation.update(req.body);
 
-      return res.json({reservation});
-    } catch (error) {
-      res.status(500).json({
-        message: error.message,
-      });
-    }
-  });
+//       return res.json({reservation});
+//     } catch (error) {
+//       res.status(500).json({
+//         message: error.message,
+//       });
+//     }
+//   });
 
-  passengerReservationOneWay.delete("/:reservation_id", async (req, res) => {
-    const { reservation_id } = req.params;
+//   passengerReservationOneWay.delete("/:reservation_id", async (req, res) => {
+//     const { reservation_id } = req.params;
 
-    try {
-      const reservation = await DB.passengers.passengerReservationOneWay.findByPk(
-        reservation_id
-      );
-      if (!reservation) {
-        return res
-          .status(404)
-          .json({ message: `Reservation with id ${reservation_id} not found` });
-      }
+//     try {
+//       const reservation = await DB.passengers.passengerReservationOneWay.findByPk(
+//         reservation_id
+//       );
+//       if (!reservation) {
+//         return res
+//           .status(404)
+//           .json({ message: `Reservation with id ${reservation_id} not found` });
+//       }
 
-      await reservation.destroy();
+//       await reservation.destroy();
 
       
-      res.status(200).json({
-        message: "Successfully deleted",
-      });
-    } catch (error) {
-      res.status(500).json({
-        message: error.message,
-      });
-    }
-  });
+//       res.status(200).json({
+//         message: "Successfully deleted",
+//       });
+//     } catch (error) {
+//       res.status(500).json({
+//         message: error.message,
+//       });
+//     }
+//   });
 
-  return passengerReservationOneWay;
-}
+//   return passengerReservationOneWay;
+// }
