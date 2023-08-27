@@ -201,30 +201,42 @@ export function createFormRegister(DB, sequelize) {
           }
         }
       
-        // Acceder a los datos de los días para el vehículo actual
-        const days = ['Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays', 'Sundays'];
 
-        for (const dayProperty of days) {
-          const table = DB.drivers.daysOfWeek.find((table) => table.tableName === dayProperty);
-          const dayDataList = vehicleData[dayProperty];
-  
-          console.log(`Updating records for ${dayProperty}`);
-          for (const dayData of dayDataList) {
-            const dayDataId = dayData.id;
-            console.log(`Updating record with ID: ${dayDataId}`);
-  
-            try {
-              await table.update(dayData, {
-                where: { id: dayDataId },
-                transaction: trx,
-              });
-              console.log(`Record updated successfully`);
-            } catch (updateError) {
-              console.error(`Error while updating record:`, updateError);
-            }
+        const updatedRecordsArray = [];
+
+        // Acceder a los datos de los días para el vehículo actual
+        const days =  [ "Monday",    "Tuesday",
+        "Wednesday", "Thursday",
+        "Friday",    "Saturday",
+        "Sunday"]
+// Acceder a los datos de los días para el vehículo actual
+for (const dayProperty of days) {
+ 
+  const bla = `${dayProperty}s`
+  const dayDataList = vehicleData[bla];
+
+  const tableIndex = days.indexOf(dayProperty);
+  const table = daysOfWeek[tableIndex];
+  console.log(`Updating records for ${dayProperty}`);
+
+  for (const dayData of dayDataList) {
+    const dayDataId = dayData.id;
+
+    try {
+      // Utiliza el método update del modelo correspondiente
+      const updatedRecord= await table.update(dayData, {
+        where: { id: dayDataId },
+        transaction: trx,
+      });
+      console.log(`Record updated successfully`);
+    } catch (updateError) {
+      console.error(`Error while updating record:`, updateError);
+    }
+  }
+}
+
           }
-        }
-      }
+        
   
       await trx.commit();
   

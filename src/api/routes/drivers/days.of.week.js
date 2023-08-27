@@ -48,9 +48,7 @@ export function dayOfWeekRouter(DB) {
       const { id } = req.params;
 
       try {
-        const dayData = await table.findAll({
-          where: { vehicle_id: id },
-        });
+        const dayData = await table.findByPk(id)
         if (!dayData) {
           return res.status(404).json({
             message: `Day ${day} not found`,
@@ -64,12 +62,24 @@ export function dayOfWeekRouter(DB) {
       }
     });
 
+
+    //       const { availability_id } = req.params;
+//       const availability = await DB.drivers.vehiclesAvailabilityTourist.findAll(  {
+//         where: { vehicle_id: availability_id } 
+//  }  );
+//    if (!availability) {
+//      return res.status(404).json({
+//        message: `Availability with id ${availability_id} not found`,
+//      });
+//    }
+
+  //  const updatedAvailability = await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(req.body,{
+  //    updateOnDuplicate: [  "available_from",  "available_to"]
+  //  });
     dayOfWeekRouter.put(`/${day}/:id`, async (req, res) => {
       const { id } = req.params;
       try {
-        const dayToUpdate = await table.findAll({
-          where: { vehicle_id: id },
-        });
+        const dayToUpdate = await table.findByPk( id )
 
         if (!dayToUpdate) {
           return res.status(404).json({

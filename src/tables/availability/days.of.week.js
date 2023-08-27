@@ -33,13 +33,13 @@ export const createDaysOfWeek = (sequelize) => {
       }
     });
 
-    table.beforeBulkUpdate(async (models) => {
-      for (const model of models) {
-        if (model.unavailable_starting && model.unavailable_until) {
-          validateHourBeforeHour(model.unavailable_starting, model.unavailable_until);
-        }
-      }
-    });
+    // table.beforeBulkUpdate(async (models) => {
+    //   for (const model of models) {
+    //     if (model.unavailable_starting && model.unavailable_until) {
+    //       validateHourBeforeHour(model.unavailable_starting, model.unavailable_until);
+    //     }
+    //   }
+    // });
 
     return table;
   });
