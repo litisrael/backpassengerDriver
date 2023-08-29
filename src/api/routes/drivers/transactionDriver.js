@@ -20,38 +20,41 @@ export function createFormRegister(DB, sequelize) {
         where: { company_id: companyData.company_id }, // Ajustar al nombre real del campo en tu modelo de vehículo
       });
   
-      // Buscar los días de la semana relacionados con los vehículos
-     
-
-      const daysData = {};
-
-      for (const dayModel of daysOfWeek) { // Cambiar daysOfWeekModels a la colección de modelos de días
-        const dayName = dayModel.name; // Suponiendo que cada modelo tenga una propiedad 'name'
-        
-        const dayData = await dayModel.findAll({
-          where: { vehicle_id: vehicles.map(vehicle => vehicle.vehicle_id) },
-        });
-      
-        daysData[dayName] = dayData;
-      }
-      
-    
-      // Buscar la disponibilidad de turistas relacionada con los vehículos
-      const availabilities = await vehiclesAvailabilityTourist.findAll({
-        where: { vehicle_id: vehicles.map(vehicle => vehicle.vehicle_id) }, // Ajustar al nombre real del campo en tu modelo de disponibilidad de turistas
-      });
-  
+      // Inicializar el objeto de datos con la estructura deseada
       const data = {
         company: {
           ...companyData.dataValues,
-          vehicles:{ vehicles,
-          vehiclesAvailabilityTourist: availabilities,
-          daysData:daysData
-        }},
+          vehicles: [],
+        },
       };
   
+      // Para cada vehículo, busca sus días de la semana y disponibilidad de turistas
+      for (const vehicleData of vehicles) {
+        const vehicleDaysData = {};
+  
+        for (const dayModel of daysOfWeek) {
+          const dayData = await dayModel.findAll({
+            where: { vehicle_id: vehicleData.vehicle_id },
+          });
+  
+          vehicleDaysData[dayModel.name] = dayData;
+        }
+  
+        const availabilities = await vehiclesAvailabilityTourist.findAll({
+          where: { vehicle_id: vehicleData.vehicle_id },
+        });
+  
+        // Agregar los datos del vehículo actual al objeto de datos
+        data.company.vehicles.push({
+          ...vehicleData.dataValues,
+          daysData: vehicleDaysData,
+          vehiclesAvailabilityTourist: availabilities,
+        });
+      }
+  
       res.json(data);
- 
+  
+  
   
     } catch (error) {
       console.error("Error while fetching data:", error);
