@@ -2,7 +2,10 @@
 
 
 export function validateHourBeforeHour(a, b) {
-  
+    if (a === null || b === null) {
+    // Si uno de los valores es nulo, no se realiza la validación
+    return;
+    }
   const addLeadingZero = (time) => {
     const [hours, minutes] = time.split(':');
     const formattedMinutes = minutes.length === 1 ? `0${minutes}` : minutes;

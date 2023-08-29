@@ -34,6 +34,12 @@ export const createCompany = (sequelize) => {
         // unique: true,
         // validate: { isNumeric: true, len: [2, 10] },
       },
+
+      address_company: {
+        type: DataTypes.STRING(80),
+        allowNull: true, // Si las coordenadas pueden ser nulas, establece esta opción a true
+      },
+
       work_zone: {
         type: DataTypes.GEOGRAPHY("POINT"),
         allowNull: true, // Si las coordenadas pueden ser nulas, establece esta opción a true
