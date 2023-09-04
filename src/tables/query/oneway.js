@@ -17,7 +17,8 @@ export async function queryAvailableDriversForTrip(sequelize, dayOfWeek ,id_one_
     WHERE r.number_of_passengers <= (
       SELECT number_of_seats FROM extended_travel.vehicles WHERE vehicle_id = v.vehicle_id
     )
-    AND (a.unavailable_starting IS NULL OR a.unavailable_until IS NULL OR r.departure_hour NOT BETWEEN a.unavailable_starting AND a.unavailable_until OR a IS NULL)
+   
+    AND r.departure_hour NOT BETWEEN a.unavailable_starting AND a.unavailable_until
 
     AND r.id_one_way = '${id_one_way}';
   `);

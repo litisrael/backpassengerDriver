@@ -15,6 +15,11 @@ export function createFormRegister(DB, sequelize) {
         where: { auth_id: auth0Id },
       });
   
+      if(!companyData){
+        return res.status(500).json({
+          message: "  sos muy feoooo y no estas subscrito",
+        
+        });}
       // Buscar los vehículos relacionados con la compañía
       const vehicles = await vehicle.findAll({
         where: { company_id: companyData.company_id }, // Ajustar al nombre real del campo en tu modelo de vehículo
@@ -36,7 +41,9 @@ export function createFormRegister(DB, sequelize) {
           const dayData = await dayModel.findAll({
             where: { vehicle_id: vehicleData.vehicle_id },
           });
-  
+          console.log("dayData",dayData);
+          console.log("dayModel",dayModel);
+    //  tendria que verificar que el nombre del dia dayModel sea el mismo dia dayData
           vehicleDaysData[dayModel.name] = dayData;
         }
   
@@ -67,7 +74,7 @@ export function createFormRegister(DB, sequelize) {
 
   FormRegister.post("/", async (req, res) => {
     // console.log(req.body.data);
-    // console.log(req.body.data.formVehicle);
+    console.log("req.body.data.formVehicle",req.body.data.formVehicle);
     // console.log(req.body.data.formDays);
     // console.log(req.body.data.calendarDisableTourist);
     try {
@@ -111,8 +118,15 @@ export function createFormRegister(DB, sequelize) {
             }
           );
 
-        for (const dayData of req.body.data.formDays.days) {
-          const { day, data } = dayData;
+    // const vehicles = req.body.data.formVehicle.vehicle
+    for (const vehicle of req.body.data.formVehicle.vehicle) {
+      const { days } = vehicle;
+      
+      // Itera sobre cada día dentro de "days"
+      for (const dayData of days) {
+        const { day, data } = dayData;
+        console.log("Día:", day);
+        console.log("Datos:", data);
           const table = DB.drivers.daysOfWeek.find(
             (table) => table.tableName === day
           );
@@ -130,6 +144,7 @@ export function createFormRegister(DB, sequelize) {
             dataDay,
           });
         }
+      }
       }
 
       await trx.commit().then(() => {
