@@ -104,30 +104,44 @@ export function createFormRegister(DB, sequelize) {
       for (const vehicle of vehicles) {
         const vehicleId = vehicle.vehicle_id;
 
-        const disableCalendarData =
-          req.body.data.calendarDisableTourist.calendarDisable.map((dates) => ({
-            ...dates,
-            vehicle_id: vehicleId,
-          }));
+        // const disableCalendarData =
+        //   req.body.data.formVehicle.vehicle.calendarDisable.map((dates) => ({
+        //     ...dates,
+        //     vehicle_id: vehicleId,
+        // //   }));
 
-        availableTourist =
-          await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(
-            disableCalendarData,
-            {
-              transaction: trx,
-            }
-          );
+        // availableTourist =
+        //   await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(
+        //     disableCalendarData,
+        //     {
+        //       transaction: trx,
+        //     }
+        //   );
 
     // const vehicles = req.body.data.formVehicle.vehicle
     for (const vehicle of req.body.data.formVehicle.vehicle) {
-      const { days } = vehicle;
-      
+      const { days, calendarDisable } = vehicle;
+
+    
+
+    const disableCalendarData = calendarDisable.map((dates) => ({
+      ...dates,
+      vehicle_id: vehicleId,
+    }));
+    
+  console.log("disableCalendarData",disableCalendarData);
+    availableTourist = await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(
+      disableCalendarData,
+      {
+        transaction: trx,
+      }
+    );
       // Itera sobre cada día dentro de "days"
       for (const dayData of days) {
         const { day, data } = dayData;
-        console.log("Día:", day);
-        console.log("Datos:", data);
-          const table = DB.drivers.daysOfWeek.find(
+        // console.log("Día:", day);
+        // console.log("Datos:", data);
+          const tableDays = DB.drivers.daysOfWeek.find(
             (table) => table.tableName === day
           );
           const recordsToInsert = data.map((dataItem) => ({
@@ -135,7 +149,7 @@ export function createFormRegister(DB, sequelize) {
             vehicle_id: vehicleId,
           }));
 
-          const dataDay = await table.bulkCreate(recordsToInsert, {
+          const dataDay = await tableDays.bulkCreate(recordsToInsert, {
             transaction: trx,
           });
 

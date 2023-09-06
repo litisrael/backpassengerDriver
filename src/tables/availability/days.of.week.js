@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { validateHourBeforeHour, validateABeforeB } from "../utility.js";
 
-export const createDaysOfWeek = (sequelize) => {
+export const createDaysOfWeek = async (sequelize) => {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const tablesDays = daysOfWeek.map(dayOfWeek => {
@@ -22,7 +22,7 @@ export const createDaysOfWeek = (sequelize) => {
     }, {
       tableName: dayOfWeek,
       timestamps: false,
-      schema: "availability_drivers"
+      schema: "extended_travel"
     });
 
     table.beforeBulkCreate(async (models) => {

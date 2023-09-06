@@ -26,12 +26,7 @@ export function queryPricesOneWayPassenger(DB) {
         replacements: { auth_id: auth_id },
         type: DB.sequelize.QueryTypes.SELECT,
       });
-
-      if (results.length === 0) {
-        console.log('No drivers available');
-        return res.status(404).json({ message: 'No drivers available' });
-      }
-
+    
       console.log(results);
       res.json(results);
     } catch (error) {

@@ -6,7 +6,7 @@ import {
 } from "../utility.js";
 import { queryAvailableDriversForTrip } from "../query/oneway.js";
 
-let DriversForOneWay;
+export let DriversForOneWay;
 
 
 export const createReservationOneWay = (sequelize) => {
@@ -81,8 +81,8 @@ export const createReservationOneWay = (sequelize) => {
     model.day_week = dayOfWeekInEnglish;
   });
 
-  ReservationOneWay.afterCreate((model) => {
-    DriversForOneWay = queryAvailableDriversForTrip(
+  ReservationOneWay.afterCreate(async(model) => {
+    DriversForOneWay =await queryAvailableDriversForTrip(
       sequelize,
       model.day_week,
       model.id_one_way

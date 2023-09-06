@@ -33,7 +33,7 @@ export function createVehicleAvailabilityTourist(sequelize) {
     {
       tableName: "vehicle_availability_tourist",
       timestamps: false,
-      schema: "availability_drivers",
+      schema: "extended_travel",
     }
   );
   // beforeBulkCreate / beforeBulkUpdate

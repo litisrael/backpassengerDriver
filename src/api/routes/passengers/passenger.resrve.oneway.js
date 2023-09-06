@@ -1,16 +1,16 @@
 import express from "express";
-
+import { DriversForOneWay } from "../../../tables/passengers/reserve.one.way.js";
 
 export function passengerReservationOneWay(DB) {
   const passengerReservationOneWay = express.Router();
 
   passengerReservationOneWay.post("/", async (req, res) => {
-   
+    console.log(DriversForOneWay)
     try {
       const newReservation = await DB.passengers.passengerReservationOneWay.create(req.body);
 console.log(req.body)
 
-      return res.json(newReservation);
+      return res.json({newReservation, DriversForOneWay});
     } catch (error) {
       res.status(500).json({
         message: error.message,

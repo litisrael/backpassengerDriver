@@ -1,13 +1,14 @@
 import express from "express";
 
 export function getDriversAvailableOneWay(DB) {
-// creo que es mejor mdificar  q sean solo join y no left join
-    const DriversAvailable = express.Router();
-    DriversAvailable.get("/:auth_id", async (req, res) => {
-        const { auth_id } = req.params;
+  // creo que es mejor mdificar  q sean solo join y no left join
+  const DriversAvailable = express.Router();
+  DriversAvailable.get("/:auth_id", async (req, res) => {
+    const { auth_id } = req.params;
 
-        try {
-            const results = await DB.sequelize.query(`
+    try {
+      const results = await DB.sequelize.query(
+        `
                 
 SELECT DISTINCT *
 FROM extended_travel.company AS c
@@ -46,26 +47,27 @@ AND (
                         FROM extended_travel.company
                         WHERE auth_id = :auth_id
                     );
-            `, {
-                replacements: { auth_id },
-                type: DB.sequelize.QueryTypes.SELECT
-            });
-
-            if (results.length === 0) {
-                console.log('No drivers available');
-                return res.status(404).json({
-                    message: `No drivers available`,
-                });
-            }
-
-            res.json(results);
-
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({
-                message: error.message,
-            });
+            `,
+        {
+          replacements: { auth_id },
+          type: DB.sequelize.QueryTypes.SELECT,
         }
-    });
-    return DriversAvailable;
+      );
+
+      if (results.length === 0) {
+        console.log("No drivers available");
+        return res.status(404).json({
+          message: `No drivers available`,
+        });
+      }
+
+      res.json(results);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  });
+  return DriversAvailable;
 }
