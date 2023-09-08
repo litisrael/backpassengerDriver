@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
-export const createPassenger =  (sequelize) => {
-const Passenger = sequelize.define('Passenger', {
+export const createPassenger =  async (sequelize) => {
+const Passenger = await  sequelize.define('Passenger', {
     id: {
       type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,

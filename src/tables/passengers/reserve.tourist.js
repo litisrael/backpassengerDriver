@@ -3,8 +3,8 @@ import {   validateABeforeB, nextYear, currentDate,validateAfterCurrentDate} fro
 import { queryAvailableDriversForTrip } from "../query/available_drivers.js";
 
 let DriversForTrip;
-export const createReservationTourist = (sequelize) => {
-  const PassengerReservation = sequelize.define(
+export const createReservationTourist = async (sequelize) => {
+  const PassengerReservation = await sequelize.define(
     "PassengerReservation",
     {
       id: {

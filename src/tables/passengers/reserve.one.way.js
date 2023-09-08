@@ -9,8 +9,8 @@ import { queryAvailableDriversForTrip } from "../query/oneway.js";
 export let DriversForOneWay;
 
 
-export const createReservationOneWay = (sequelize) => {
-  const ReservationOneWay = sequelize.define(
+export const  createReservationOneWay = async (sequelize)  => {
+  const ReservationOneWay = await sequelize.define(
     "ReservationOneWay",
     {
       id_one_way: {
@@ -64,7 +64,7 @@ export const createReservationOneWay = (sequelize) => {
     },
     {
       tableName: "reservation_oneway",
-      timestamps: true,
+      timestamps: false,
       schema: "extended_travel",
     }
   );

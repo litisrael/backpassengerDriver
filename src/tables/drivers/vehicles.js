@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
-export const createVehicle =  (sequelize) => {
-    const Vehicle = sequelize.define(
+export const createVehicle = async (sequelize) => {
+    const Vehicle =await sequelize.define(
       "Vehicle",
       {
         vehicle_id: {
@@ -56,7 +56,6 @@ export const createVehicle =  (sequelize) => {
       }
     );
     
-    // sequelize.sync({force:true});
     return Vehicle;
   };
   

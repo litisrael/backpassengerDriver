@@ -41,8 +41,7 @@ export function createFormRegister(DB, sequelize) {
           const dayData = await dayModel.findAll({
             where: { vehicle_id: vehicleData.vehicle_id },
           });
-          console.log("dayData",dayData);
-          console.log("dayModel",dayModel);
+          
     //  tendria que verificar que el nombre del dia dayModel sea el mismo dia dayData
           vehicleDaysData[dayModel.name] = dayData;
         }
@@ -73,10 +72,8 @@ export function createFormRegister(DB, sequelize) {
   });
 
   FormRegister.post("/", async (req, res) => {
-    // console.log(req.body.data);
-    console.log("req.body.data.formVehicle",req.body.data.formVehicle);
-    // console.log(req.body.data.formDays);
-    // console.log(req.body.data.calendarDisableTourist);
+
+    let trx; 
     try {
       trx = await sequelize.transaction();
 
@@ -86,91 +83,84 @@ export function createFormRegister(DB, sequelize) {
           transaction: trx,
         }
       );
+     
 
       const companyId = company.company_id; // Obtener el UUID de la compañía creada
 
-      const vehicleData = req.body.data.formVehicle.vehicle.map((vehicle) => ({
-        ...vehicle,
-        company_id: companyId, // Asignar el UUID de la compañía al campo "company_id" del vehículo
-      }));
+      const vehicleData = req.body.data.formVehicle.vehicle.map((vehicle)=> {
+        const { days, calendarDisable, ...vehicleWithoutDaysAndCalendarDisable } = vehicle;
+        return {
+          ...vehicleWithoutDaysAndCalendarDisable,
+          company_id: companyId,
+        };
+      });
+
+      // console.log("vehicleData", vehicleData);
+
 
       const vehicles = await DB.drivers.vehicle.bulkCreate(vehicleData, {
         transaction: trx,
       });
-      let calendarDays = [];
+     const vehicleIds = vehicles.map((vehicle) => vehicle.vehicle_id);
 
-      let availableTourist = [];
+  // Obtener los datos de los vehículos del cuerpo de la solicitud
+  const vehicleDataItem = req.body.data.formVehicle.vehicle;
 
-      for (const vehicle of vehicles) {
-        const vehicleId = vehicle.vehicle_id;
+  // Crear un array para almacenar las promesas
+ 
+  for (let index = 0; index < vehicleDataItem.length; index++) {
+    const item = vehicleDataItem[index];
+    const { calendarDisable, days } = item;
+    const vehicleId = vehicleIds[index];
 
-        // const disableCalendarData =
-        //   req.body.data.formVehicle.vehicle.calendarDisable.map((dates) => ({
-        //     ...dates,
-        //     vehicle_id: vehicleId,
-        // //   }));
-
-        // availableTourist =
-        //   await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(
-        //     disableCalendarData,
-        //     {
-        //       transaction: trx,
-        //     }
-        //   );
-
-    // const vehicles = req.body.data.formVehicle.vehicle
-    for (const vehicle of req.body.data.formVehicle.vehicle) {
-      const { days, calendarDisable } = vehicle;
-
-    
-
-    const disableCalendarData = calendarDisable.map((dates) => ({
-      ...dates,
+    const availabilityData = {
+      disable_from: calendarDisable.disable_from,
+      disable_until: calendarDisable.disable_until,
       vehicle_id: vehicleId,
-    }));
-    
-  console.log("disableCalendarData",disableCalendarData);
-    availableTourist = await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(
-      disableCalendarData,
+    };
+    const availableTourist = await DB.drivers.vehiclesAvailabilityTourist.bulkCreate(
+      [availabilityData] ,
       {
         transaction: trx,
       }
     );
-      // Itera sobre cada día dentro de "days"
-      for (const dayData of days) {
-        const { day, data } = dayData;
-        // console.log("Día:", day);
-        // console.log("Datos:", data);
-          const tableDays = DB.drivers.daysOfWeek.find(
-            (table) => table.tableName === day
-          );
-          const recordsToInsert = data.map((dataItem) => ({
-            ...dataItem,
-            vehicle_id: vehicleId,
-          }));
 
-          const dataDay = await tableDays.bulkCreate(recordsToInsert, {
-            transaction: trx,
-          });
+  
+    for (const dayData of days) {
+      const { day, data } = dayData;
 
-          calendarDays.push({
-            day,
-            dataDay,
-          });
-        }
-      }
-      }
+      // Encontrar la tabla correspondiente para el día
+      const tableDays = DB.drivers.daysOfWeek.find(
+        (table) => table.tableName === day
+      );
 
-      await trx.commit().then(() => {
+      // Crear registros de días
+      const recordsToInsert = data.map((dataItem) => ({
+        ...dataItem,
+        vehicle_id: vehicleId,
+      }));
+
+      await tableDays.bulkCreate(recordsToInsert, {
+        transaction: trx,
+      });
+    }
+
+
+  
+  }
+
+
+  await trx.commit();
+
+  
         return res.json({
           company,
           vehicles,
-          calendarDays,
-          availableTourist,
+       
         });
-      });
+ 
     } catch (error) {
-      console.log("error");
+      console.log("error",error);
 
       trx.rollback();
 

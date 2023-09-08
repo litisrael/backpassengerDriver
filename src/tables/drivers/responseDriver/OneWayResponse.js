@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
-export const createResponseOneWay = (sequelize) => {
-  const responseOneWay = sequelize.define(
+export const createResponseOneWay = async(sequelize) => {
+  const responseOneWay = await sequelize.define(
     "responseOneWay",
     {
       resoponse_one_way_id: {

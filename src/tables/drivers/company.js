@@ -2,8 +2,8 @@ import { DataTypes } from "sequelize";
 import { regionEnum } from "../utility.js";
 import { createVehicleAvailabilityTourist } from "../availability/vehicles.availability.tourist.js";
 
-export const createCompany = (sequelize) => {
-  const Company = sequelize.define(
+export const createCompany = async (sequelize) => {
+  const Company = await sequelize.define(
     "Company",
     {
       company_id: {

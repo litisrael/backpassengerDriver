@@ -51,7 +51,7 @@ export const createReservationTwoWays = (sequelize) => {
     },
     {
       tableName: "reservation_two_ways",
-      timestamps: true,
+      timestamps: false,
       schema: "extended_travel",
     }
   );

@@ -1,10 +1,10 @@
 import { DataTypes } from "sequelize";
 import { validateHourBeforeHour, validateABeforeB } from "../utility.js";
 
-export const createDaysOfWeek = async (sequelize) => {
+export const createDaysOfWeek = async(sequelize) => {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  const tablesDays = daysOfWeek.map(dayOfWeek => {
+  const tablesDays = daysOfWeek.map((dayOfWeek) => {
     const table = sequelize.define(dayOfWeek, {
       id: {
         type: DataTypes.UUID,
