@@ -10,10 +10,6 @@ import { createDaysOfWeek } from "./availability/days.of.week.js";
 import { createReservationTwoWays } from "./passengers/reserve.two.ways.js";
 import { createResponseOneWay } from "./drivers/responseDriver/OneWayResponse.js";
 import { createResponseTwoWays } from "./drivers/responseDriver/twoWaysresopose.js";
-// let company = null;
-// let passenger = null
-// let passengerReservationOneWay =null
-// let reservationTwoWays = null;
 
 async function tablesDrivers(sequelize) {
  const  company = await createCompany(sequelize);
@@ -22,22 +18,7 @@ async function tablesDrivers(sequelize) {
     sequelize
   );
   const daysOfWeek = await createDaysOfWeek(sequelize);
-
-  return {
-    company,
-    vehicle,
-    vehiclesAvailabilityTourist,
-    daysOfWeek,
-  };
-}
-
-function defineDriversRelations({
-  company,
-  vehicle,
-  vehiclesAvailabilityTourist,
-  daysOfWeek,
-}) {
-  company.hasMany(vehicle, {
+ company.hasMany(vehicle, {
     foreignKey: {
       name: "company_id",
       allowNull: false,
@@ -80,7 +61,15 @@ function defineDriversRelations({
       },
     });
   }
+  return {
+    company,
+    vehicle,
+    vehiclesAvailabilityTourist,
+    daysOfWeek,
+  };
 }
+
+
 
 async function tablesPassenger(sequelize) {
   const passenger = await createPassenger(sequelize);
@@ -88,23 +77,6 @@ async function tablesPassenger(sequelize) {
   const passengerReservationOneWay = await createReservationOneWay(sequelize);
   const reservationTwoWays = await createReservationTwoWays(sequelize);
 
-  // sequelize.sync({ alter: true });
-  // para que no puedan update las fk
-
-  return {
-    passenger,
-    passengerReservationTourist,
-    passengerReservationOneWay,
-    reservationTwoWays,
-  };
-}
-
-function definePassengerRelations({
-  passenger,
-  passengerReservationTourist,
-  passengerReservationOneWay,
-  reservationTwoWays,
-}) {
   passenger.hasMany(passengerReservationOneWay, {
     foreignKey: { name: "passenger_id", allowNull: false },
   });
@@ -128,59 +100,52 @@ function definePassengerRelations({
   passengerReservationTourist.belongsTo(passenger, {
     foreignKey: { name: "passenger_id", allowNull: false },
   });
+
+  return {
+    passenger,
+    passengerReservationTourist,
+    passengerReservationOneWay,
+    reservationTwoWays,
+  };
 }
+
 
 async function tablesPrices(sequelize) {
-  // const  passengerReservationOneWay = await createReservationOneWay(sequelize);
+  const  passengerReservationOneWay = await createReservationOneWay(sequelize);
   const responseOneWay = await createResponseOneWay(sequelize);
-  // const company = await createCompany(sequelize);
-  // const  reservationTwoWays = await createReservationTwoWays(sequelize)
+  const company = await createCompany(sequelize);
+  const  reservationTwoWays = await createReservationTwoWays(sequelize)
   const responseTwoWays = await createResponseTwoWays(sequelize);
+  
 
+    responseOneWay.hasMany(company, {
+      foreignKey: {
+        name: "company_id",
+        allowNull: true,
+  
+      },
+    });
+  
+   
+    responseOneWay.belongsTo(passengerReservationOneWay, {
+      foreignKey: { name: "id_one_way", allowNull: false },
+    });
+  
+    responseOneWay.belongsTo(passengerReservationOneWay, {
+      foreignKey: { name: "id_one_way", allowNull: false },
+    });
+  
+    reservationTwoWays.hasMany(responseTwoWays, {
+      foreignKey: { name: "id", allowNull: false },
+    });
+    responseTwoWays.belongsTo(reservationTwoWays, {
+      foreignKey: { name: "id", allowNull: false },
+    });
+  
+    passengerReservationOneWay.hasMany(responseOneWay, {
+      foreignKey: { name: "id_one_way", allowNull: false },
+    });
   return { responseOneWay, responseTwoWays };
-}
-
-function definePricesRelations({
-  company,
-  passengerReservationOneWay,
-  responseOneWay,
-  reservationTwoWays,
-  responseTwoWays,
-})
- {
-
-  responseOneWay.hasMany(company, {
-    foreignKey: {
-      name: "company_id",
-      allowNull: true,
-
-    },
-  });
-
-  company.belongsTo(responseOneWay, {
-    foreignKey: {
-      name: "company_id",
-      allowNull: true,
-    },
-  });
-  responseOneWay.belongsTo(passengerReservationOneWay, {
-    foreignKey: { name: "id_one_way", allowNull: false },
-  });
-
-  responseOneWay.belongsTo(passengerReservationOneWay, {
-    foreignKey: { name: "id_one_way", allowNull: false },
-  });
-
-  reservationTwoWays.hasMany(responseTwoWays, {
-    foreignKey: { name: "id", allowNull: false },
-  });
-  responseTwoWays.belongsTo(reservationTwoWays, {
-    foreignKey: { name: "id", allowNull: false },
-  });
-
-  passengerReservationOneWay.hasMany(responseOneWay, {
-    foreignKey: { name: "id_one_way", allowNull: false },
-  });
 }
 
 
@@ -191,15 +156,6 @@ async function createTables(sequelize) {
 
   const responseDriver = await tablesPrices(sequelize);
 
-  defineDriversRelations(drivers);
-  definePassengerRelations(passengers);
-  definePricesRelations({
-     company: await createCompany(sequelize),
-    responseOneWay: responseDriver.responseOneWay,
-    passengerReservationOneWay: await createReservationOneWay(sequelize),
-    reservationTwoWays: passengers.reservationTwoWays,
-    responseTwoWays: responseDriver.responseTwoWays,
-  });
   return {
     drivers,
     passengers,
