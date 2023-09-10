@@ -128,6 +128,7 @@ async function tablesPrices(sequelize) {
 
  responseOneWay.belongsTo(company, {
   foreignKey: { name: 'company_id', allowNull: false },
+  onDelete: 'CASCADE',
 });
 
 
@@ -139,11 +140,9 @@ async function tablesPrices(sequelize) {
 // });
 
 
-
-  passengerReservationOneWay.hasMany(responseOneWay, {
-    foreignKey: { name: "id_one_way", allowNull: false },
-  });
-
+passengerReservationOneWay.hasMany(responseOneWay, {
+  foreignKey: { name: "id_one_way", allowNull: false },
+});
   // responseOneWay.belongsTo(passengerReservationOneWay, {
   //   foreignKey: { name: "id_one_way",  allowNull: false },
   // });
