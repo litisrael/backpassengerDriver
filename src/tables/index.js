@@ -140,7 +140,7 @@ async function tablesPrices(sequelize) {
   return { responseOneWay, responseTwoWays };
 }
 
-function definePricesRelations({
+async function definePricesRelations({
   company,
   passengerReservationOneWay,
   responseOneWay,
@@ -193,9 +193,9 @@ async function createTables(sequelize) {
   definePassengerRelations(passengers);
 
   definePricesRelations({
-    company: await createCompany(sequelize),
+    company: await drivers.company,
     responseOneWay: responseDriver.responseOneWay,
-    passengerReservationOneWay: await createReservationOneWay(sequelize),
+    passengerReservationOneWay:await passengers.passengerReservationOneWay,
     reservationTwoWays: passengers.reservationTwoWays,
     responseTwoWays: responseDriver.responseTwoWays,
   });

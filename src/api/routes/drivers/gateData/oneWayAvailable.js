@@ -16,13 +16,13 @@ JOIN extended_travel.vehicles AS v ON c.company_id = v.company_id
 JOIN extended_travel.reservation_oneway AS r ON ST_DWithin(r.coordinates_destine::geography, c.work_zone::geography, c.radius)
      OR ST_DWithin(r.coordinates_origin::geography, c.work_zone::geography, c.radius)
 JOIN extended_travel.passenger AS p ON p.id = r.passenger_id
-LEFT JOIN availability_drivers.Sunday AS sun ON v.vehicle_id = sun.vehicle_id AND r.day_week = 'Sunday'
-LEFT JOIN availability_drivers.Monday AS mon ON v.vehicle_id = mon.vehicle_id AND r.day_week = 'Monday'
-LEFT JOIN availability_drivers.Tuesday AS tue ON v.vehicle_id = tue.vehicle_id AND r.day_week = 'Tuesday'
-LEFT JOIN availability_drivers.Wednesday AS wed ON v.vehicle_id = wed.vehicle_id AND r.day_week = 'Wednesday'
-LEFT JOIN availability_drivers.Thursday AS thu ON v.vehicle_id = thu.vehicle_id AND r.day_week = 'Thursday'
-LEFT JOIN availability_drivers.Friday AS fri ON v.vehicle_id = fri.vehicle_id AND r.day_week = 'Friday'
-LEFT JOIN availability_drivers.Saturday AS sat ON v.vehicle_id = sat.vehicle_id AND r.day_week = 'Saturday'
+LEFT JOIN extended_travel.Sunday AS sun ON v.vehicle_id = sun.vehicle_id AND r.day_week = 'Sunday'
+LEFT JOIN extended_travel.Monday AS mon ON v.vehicle_id = mon.vehicle_id AND r.day_week = 'Monday'
+LEFT JOIN extended_travel.Tuesday AS tue ON v.vehicle_id = tue.vehicle_id AND r.day_week = 'Tuesday'
+LEFT JOIN extended_travel.Wednesday AS wed ON v.vehicle_id = wed.vehicle_id AND r.day_week = 'Wednesday'
+LEFT JOIN extended_travel.Thursday AS thu ON v.vehicle_id = thu.vehicle_id AND r.day_week = 'Thursday'
+LEFT JOIN extended_travel.Friday AS fri ON v.vehicle_id = fri.vehicle_id AND r.day_week = 'Friday'
+LEFT JOIN extended_travel.Saturday AS sat ON v.vehicle_id = sat.vehicle_id AND r.day_week = 'Saturday'
 WHERE r.number_of_passengers <= (
     SELECT number_of_seats FROM extended_travel.vehicles WHERE vehicle_id = v.vehicle_id
 )
