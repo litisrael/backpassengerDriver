@@ -153,16 +153,15 @@ function definePricesRelations({
     foreignKey: {
       name: "company_id",
       allowNull: true,
-
     },
   });
-
-  // company.belongsTo(responseOneWay, {
-  //   foreignKey: {
-  //     name: "company_id",
-  //     allowNull: false,
-  //   },
-  // });
+  
+  company.belongsTo(responseOneWay, {
+    foreignKey: {
+      name: "company_id",
+      allowNull: true,
+    },
+  });
   responseOneWay.belongsTo(passengerReservationOneWay, {
     foreignKey: { name: "id_one_way", allowNull: false },
   });
@@ -190,11 +189,11 @@ async function createTables(sequelize) {
   const passengers = await tablesPassenger(sequelize);
 
   const responseDriver = await tablesPrices(sequelize);
-
   defineDriversRelations(drivers);
   definePassengerRelations(passengers);
+
   definePricesRelations({
-     company: await createCompany(sequelize),
+    company: await createCompany(sequelize),
     responseOneWay: responseDriver.responseOneWay,
     passengerReservationOneWay: await createReservationOneWay(sequelize),
     reservationTwoWays: passengers.reservationTwoWays,
@@ -210,12 +209,15 @@ async function createTables(sequelize) {
 export async function initDB() {
   const sequelize = await getConnection();
 
-  // await sequelize.createSchema('extended_travel');
+  await sequelize.createSchema('extended_travel');
   const tables = await createTables(sequelize);
 
   sequelize
     .sync(
-    // {force :true}
+    
+      // {force :true}
+    
+
     // { alter: true }
     )
   return { tables, sequelize };

@@ -4,8 +4,8 @@ import { validateHourBeforeHour, validateABeforeB } from "../utility.js";
 export const createDaysOfWeek = async(sequelize) => {
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  const tablesDays = daysOfWeek.map((dayOfWeek) => {
-    const table = sequelize.define(dayOfWeek, {
+  const tablesDays = await Promise.all( daysOfWeek.map(async(dayOfWeek) => {
+    const table =await sequelize.define(dayOfWeek, {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -42,7 +42,7 @@ export const createDaysOfWeek = async(sequelize) => {
     });
 
     return table;
-  });
+  }));
 
   return tablesDays;
 }

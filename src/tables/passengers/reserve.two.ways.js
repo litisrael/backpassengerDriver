@@ -5,8 +5,8 @@ import {
   getDayOfWeekInEnglish,
 } from "../utility.js";
 
-export const createReservationTwoWays = (sequelize) => {
-  const ReservationTwoWays = sequelize.define(
+export const createReservationTwoWays = async(sequelize) => {
+  const ReservationTwoWays = await sequelize.define(
     "ReservationTwoWays",
     {
       id: {

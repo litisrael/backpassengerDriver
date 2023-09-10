@@ -9,8 +9,8 @@ import {
 import { validateDateNotBetweenExisting } from "../query/available_drivers.js";
 
 
-export function createVehicleAvailabilityTourist(sequelize) {
-  const VehicleAvailability = sequelize.define(
+export async  function createVehicleAvailabilityTourist(sequelize) {
+  const VehicleAvailability = await sequelize.define(
     "VehicleAvailability",
     {
       id: {
