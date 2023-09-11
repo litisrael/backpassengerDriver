@@ -19,14 +19,12 @@ export function queryPricesOneWayPassenger(DB) {
      INNER JOIN
   extended_travel.company c ON r.company_id = c.company_id
    WHERE
-     p.auth_id = 'google-oauth2|104855243921331044464';
-      `;
+   p.auth_id = :auth_id;`; // Utiliza un marcador de posición :auth_id en la consulta
 
       const results = await DB.sequelize.query(query, {
         replacements: { auth_id: auth_id },
         type: DB.sequelize.QueryTypes.SELECT,
       });
-    
       console.log(results);
       res.json(results);
     } catch (error) {
