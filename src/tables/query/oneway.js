@@ -9,7 +9,7 @@ export async function queryAvailableDriversForTrip(sequelize, dayOfWeek ,id_one_
     SELECT DISTINCT  *
     FROM extended_travel.company AS c
     JOIN extended_travel.vehicles AS v ON c.company_id = v.company_id
-    LEFT JOIN availability_drivers.${dayOfWeek} AS a ON v.vehicle_id = a.vehicle_id
+    LEFT JOIN extended_travel.${dayOfWeek} AS a ON v.vehicle_id = a.vehicle_id
     JOIN extended_travel.reservation_oneway AS r ON ST_DWithin(r.coordinates_destine::geography, c.work_zone::geography, c.radius)
      OR ST_DWithin(r.coordinates_origin::geography, c.work_zone::geography, c.radius)
     
@@ -32,7 +32,7 @@ export async function queryAvailableDriversForTrip(sequelize, dayOfWeek ,id_one_
     console.log('No drivers available');
     return 'No drivers available';
   }
-   console.log(results[0]);
+   console.log(results);
 
   return results[0];
       } catch (error) {
